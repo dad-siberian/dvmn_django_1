@@ -1,32 +1,24 @@
-import json
-
 from django.shortcuts import render
+
+from places.models import Place
 
 
 def show_main(request):
-    files = {
-        "roofs24": "static/places/roofs24.json",
-        "moscow_legends": "static/places/moscow_legends.json",
-    }
+    places = Place.objects.all()
     places_info = {"type": "FeatureCollection", "features": []}
-    for place_id, file_path in files.items():
-        with open(file_path, "r") as file:
-            place = json.load(file)
-            feature = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        place["coordinates"]["lng"],
-                        place["coordinates"]["lat"],
-                    ],
-                },
-                "properties": {
-                    "title": place["title"],
-                    "placeId": place_id,
-                    "detailsUrl": file_path,
-                },
-            }
-            places_info["features"].append(feature)
+    for place in places:
+        feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [place.lng, place.lat],
+            },
+            "properties": {
+                "title": place.title,
+                "placeId": place.pk,
+                # "detailsUrl": file_path,
+            },
+        }
+        places_info["features"].append(feature)
 
     return render(request, "index.html", {"places_info": places_info})
