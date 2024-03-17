@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 from places.models import Photo, Place
 
@@ -17,7 +18,9 @@ def show_main(request):
             "properties": {
                 "title": place.title,
                 "placeId": place.pk,
-                # "detailsUrl": file_path,
+                "detailsUrl": reverse(
+                    show_place_detail, kwargs={"place_id": place.pk}
+                ),
             },
         }
         places_info["features"].append(feature)
