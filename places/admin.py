@@ -1,3 +1,4 @@
+from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
 from django.utils.html import format_html
 
@@ -6,7 +7,7 @@ from .models import Photo, Place
 admin.site.register(Photo)
 
 
-class PhotoInline(admin.TabularInline):
+class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Photo
     readonly_fields = ("get_preview",)
 
@@ -15,6 +16,6 @@ class PhotoInline(admin.TabularInline):
 
 
 @admin.register(Place)
-class PlaceAdmin(admin.ModelAdmin):
+class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("title",)
     inlines = [PhotoInline]
