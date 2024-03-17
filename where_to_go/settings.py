@@ -26,10 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY", "REPLACE_ME")
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", True)
+DEBUG = env.bool("DEBUG")
+if not DEBUG:
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT")
+    SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE")
+    CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
 
