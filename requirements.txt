@@ -2,3 +2,4 @@ Django==4.2.1
 django-admin-sortable2==2.1.10
 django-tinymce==3.7.1
 environs==9.5.0
+requests==2.31.0
