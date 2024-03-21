@@ -33,8 +33,8 @@ def show_place_detail(request, place_id):
     place_info = {
         "title": place.title,
         "imgs": [img.photo.url for img in Photo.objects.filter(place=place)],
-        "description_short": place.description_short,
-        "description_long": place.description_long,
+        "short_description": place.short_description,
+        "long_description": place.long_description,
         "coordinates": {
             "lat": place.lat,
             "lng": place.lng,
