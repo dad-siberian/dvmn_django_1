@@ -10,17 +10,17 @@ from places.models import Photo, Place
 def save_to_database(json_url):
     response = requests.get(json_url)
     response.raise_for_status()
-    place_json = response.json()
+    payload = response.json()
     place = Place(
-        title=place_json["title"],
-        short_description=place_json["description_short"],
-        long_description=place_json["description_long"],
-        lng=place_json["coordinates"]["lng"],
-        lat=place_json["coordinates"]["lat"],
+        title=payload["title"],
+        short_description=payload["description_short"],
+        long_description=payload["description_long"],
+        lng=payload["coordinates"]["lng"],
+        lat=payload["coordinates"]["lat"],
     )
     place.save()
 
-    for number, img_url in enumerate(place_json["imgs"], 1):
+    for number, img_url in enumerate(payload["imgs"], 1):
         response = requests.get(img_url)
         response.raise_for_status()
         photo = Photo(place=place)
