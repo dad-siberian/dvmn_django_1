@@ -11,22 +11,24 @@ def save_to_database(json_url):
     response = requests.get(json_url)
     response.raise_for_status()
     payload = response.json()
-    place = Place(
+    place, created = Place.objects.get_or_create(
         title=payload["title"],
         short_description=payload["description_short"],
         long_description=payload["description_long"],
         lng=payload["coordinates"]["lng"],
         lat=payload["coordinates"]["lat"],
     )
-    place.save()
+    if created:
+        for number, img_url in enumerate(payload["imgs"], 1):
+            response = requests.get(img_url)
+            response.raise_for_status()
+            Photo.objects.get_or_create(
+                place=place,
+                photo=ContentFile(response.content),
+                defaults={"photo": f"photo_{number}.jpeg"},
+            )
 
-    for number, img_url in enumerate(payload["imgs"], 1):
-        response = requests.get(img_url)
-        response.raise_for_status()
-        photo = Photo(place=place)
-        photo.photo.save(
-            f"photo_{number}.jpeg", ContentFile(response.content), save=True
-        )
+    return created
 
 
 class Command(BaseCommand):
@@ -40,8 +42,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            save_to_database(options["url"])
-            self.stdout.write(self.style.SUCCESS("Локация успешно добавлена"))
+            created = save_to_database(options["url"])
+            if created:
+                self.stdout.write(
+                    self.style.SUCCESS("Локация успешно добавлена")
+                )
+            else:
+                self.stdout.write(
+                    self.style.SUCCESS("Локация не добавлена. Дубликат")
+                )
         except (
             json.decoder.JSONDecodeError,
             requests.exceptions.RequestException,
