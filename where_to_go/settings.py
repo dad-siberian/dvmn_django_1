@@ -10,13 +10,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = env.str("SECRET_KEY")
 
-DEBUG = env.bool("DEBUG")
+DEBUG = env.bool("DEBUG", True)
 if not DEBUG:
     SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT")
     SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE")
     CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["127.0.0.1"])
 
 # Application definition
 
