@@ -6,6 +6,8 @@ from .models import Photo, Place
 
 admin.site.register(Photo)
 
+PHOTO_MAX_HEIGHT = 200
+
 
 class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Photo
@@ -13,7 +15,9 @@ class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
 
     def get_preview(self, obj):
         return format_html(
-            "<img src='{}' style='max-height: 200px;'/>", obj.photo.url
+            "<img src='{}' style='max-height: {}px;'/>",
+            obj.photo.url,
+            PHOTO_MAX_HEIGHT,
         )
 
 
