@@ -32,12 +32,15 @@ class Photo(models.Model):
     """
 
     place = models.ForeignKey(
-        Place, on_delete=models.CASCADE, related_name="photos"
+        Place,
+        on_delete=models.CASCADE,
+        related_name="photos",
+        verbose_name="Место",
     )
     photo = models.ImageField(
         upload_to="places", null=True, blank=True, verbose_name="Фото"
     )
-    position = models.IntegerField(default=0)
+    position = models.IntegerField(default=0, verbose_name="Позиция")
 
     def __str__(self):
         return f"{self.position} {self.place.title}"
