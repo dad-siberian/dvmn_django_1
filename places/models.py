@@ -35,7 +35,7 @@ class Photo(models.Model):
     )
     photo = models.ImageField(upload_to="places", verbose_name="Фото")
     position = models.IntegerField(
-        default=0, blank=True, verbose_name="Позиция"
+        default=0, blank=True, db_index=True, verbose_name="Позиция"
     )
 
     class Meta:
