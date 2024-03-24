@@ -7,9 +7,8 @@ from places.models import Photo, Place
 
 def show_main(request):
     places = Place.objects.all()
-    serialize_places = {"type": "FeatureCollection", "features": []}
-    for place in places:
-        feature = {
+    features = [
+        {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
@@ -23,9 +22,13 @@ def show_main(request):
                 ),
             },
         }
-        serialize_places["features"].append(feature)
+        for place in places
+    ]
+    context = {
+        "places_info": {"type": "FeatureCollection", "features": features}
+    }
 
-    return render(request, "index.html", {"places_info": serialize_places})
+    return render(request, "index.html", context)
 
 
 def show_place_detail(request, place_id):
