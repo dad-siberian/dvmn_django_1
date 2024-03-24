@@ -4,8 +4,6 @@ from django.utils.html import format_html
 
 from .models import Photo, Place
 
-admin.site.register(Photo)
-
 PHOTO_MAX_HEIGHT = 200
 
 
@@ -25,3 +23,9 @@ class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
 class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("title",)
     inlines = [PhotoInline]
+    search_fields = ("title",)
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["place"]
