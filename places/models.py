@@ -18,11 +18,11 @@ class Place(models.Model):
     lng = models.FloatField(verbose_name="Долгота в градусах")
     lat = models.FloatField(verbose_name="Широта в градусах")
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         ordering = ["pk"]
+
+    def __str__(self):
+        return self.title
 
 
 class Photo(models.Model):
@@ -42,8 +42,8 @@ class Photo(models.Model):
     )
     position = models.IntegerField(default=0, verbose_name="Позиция")
 
-    def __str__(self):
-        return f"{self.position} {self.place.title}"
-
     class Meta:
         ordering = ["position"]
+
+    def __str__(self):
+        return f"{self.position} {self.place.title}"
