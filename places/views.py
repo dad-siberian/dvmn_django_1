@@ -1,8 +1,9 @@
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
-from places.models import Photo, Place
+from places.models import Place
 
 
 def show_main(request):
@@ -32,10 +33,12 @@ def show_main(request):
 
 
 def show_place_detail(request, place_id):
-    place = get_object_or_404(Place, id=place_id)
+    place = get_object_or_404(
+        Place.objects.prefetch_related(Prefetch("photos")), id=place_id
+    )
     serialize_place = {
         "title": place.title,
-        "imgs": [img.photo.url for img in Photo.objects.filter(place=place)],
+        "imgs": [img.photo.url for img in place.photos.all()],
         "short_description": place.short_description,
         "long_description": place.long_description,
         "coordinates": {
