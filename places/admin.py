@@ -1,5 +1,6 @@
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
+from django.db.models import Prefetch
 from django.utils.html import format_html
 
 from .models import Photo, Place
@@ -19,6 +20,15 @@ class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
             PHOTO_MAX_WIDTH,
             PHOTO_MAX_HEIGHT,
         )
+
+    def get_queryset(self, request):
+        queryset = (
+            super()
+            .get_queryset(request)
+            .prefetch_related(Prefetch("place__photos"))
+        )
+
+        return queryset
 
 
 @admin.register(Place)
