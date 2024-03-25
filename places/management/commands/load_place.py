@@ -15,10 +15,12 @@ def save_to_database(json_url):
     try:
         place, created = Place.objects.get_or_create(
             title=payload["title"],
-            short_description=payload["description_short"],
-            long_description=payload["description_long"],
             lng=payload["coordinates"]["lng"],
             lat=payload["coordinates"]["lat"],
+            defaults={
+                "short_description": payload["description_short"],
+                "long_description": payload["description_long"],
+            },
         )
     except MultipleObjectsReturned:
         return False
