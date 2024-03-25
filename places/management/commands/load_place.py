@@ -1,6 +1,7 @@
 import json
 
 import requests
+from django.core.exceptions import MultipleObjectsReturned
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 
@@ -11,18 +12,21 @@ def save_to_database(json_url):
     response = requests.get(json_url)
     response.raise_for_status()
     payload = response.json()
-    place, created = Place.objects.get_or_create(
-        title=payload["title"],
-        short_description=payload["description_short"],
-        long_description=payload["description_long"],
-        lng=payload["coordinates"]["lng"],
-        lat=payload["coordinates"]["lat"],
-    )
+    try:
+        place, created = Place.objects.get_or_create(
+            title=payload["title"],
+            short_description=payload["description_short"],
+            long_description=payload["description_long"],
+            lng=payload["coordinates"]["lng"],
+            lat=payload["coordinates"]["lat"],
+        )
+    except MultipleObjectsReturned:
+        return False
     if created:
         for number, img_url in enumerate(payload["imgs"], 1):
             response = requests.get(img_url)
             response.raise_for_status()
-            Photo.objects.get_or_create(
+            Photo.objects.create(
                 place=place,
                 photo=ContentFile(response.content),
                 defaults={"photo": f"photo_{number}.jpeg"},
