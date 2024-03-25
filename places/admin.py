@@ -5,6 +5,7 @@ from django.utils.html import format_html
 from .models import Photo, Place
 
 PHOTO_MAX_HEIGHT = 200
+PHOTO_MAX_WIDTH = 200
 
 
 class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -13,8 +14,9 @@ class PhotoInline(SortableInlineAdminMixin, admin.TabularInline):
 
     def get_preview(self, obj):
         return format_html(
-            "<img src='{}' style='max-height: {}px;'/>",
+            "<img src='{}' style='max-width: {}px; max-height: {}px;'/>",
             obj.photo.url,
+            PHOTO_MAX_WIDTH,
             PHOTO_MAX_HEIGHT,
         )
 
